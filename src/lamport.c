@@ -8,8 +8,8 @@
 
 typedef struct {
     size_t *events, num_events;
-    /* events       timestamps for each event in each process
-     * num_events   is an array having number of events for each process
+    /* events       timestamps for each event
+     * num_events   number of events
      */
 } process;
 
