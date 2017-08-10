@@ -6,28 +6,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct {
+    size_t *events, num_events;
+    /* events       timestamps for each event in each process
+     * num_events   is an array having number of events for each process
+     */
+} process;
+
 int main()
 {
-    size_t p, i, j, p1, p2, e1, e2, **processes, *num_events;
+    size_t p, i, j, p1, p2, e1, e2;
     /* p            is number of processes
      * i, j         are counters
      * p1, p2       are current processes under consideration
      * e1, e2       are current events under consideration
-     * processes    is a 2D array with timestamps for each event in each process
-     * num_events   is an array having number of events for each process
      */
 
     int option;
+    process *processes;
 
     puts("Number of Processes?");
     scanf(" %zu%*c", &p);
 
-    processes  = malloc(sizeof(*processes ) * p);
-    num_events = malloc(sizeof(*num_events) * p);
+    processes = malloc(sizeof(*processes) * p);
 
     for (i = 0; i < p; ++i) {
-        processes [i] = NULL;
-        num_events[i] = 0;
+        processes[i].events     = NULL;
+        processes[i].num_events = 0;
     }
 
     puts(
@@ -54,11 +59,12 @@ int main()
                 break;
             }
 
-            e1 = num_events[p1];
-            ++num_events[p1];
-            processes[p1] = realloc(processes[p1],
-                                    sizeof(*processes[p1]) * num_events[p1]);
-            processes[p1][e1] = processes[p1][e1 - !!e1] + 1;
+            e1 = processes[p1].num_events;
+            ++processes[p1].num_events;
+            processes[p1].events = realloc(processes[p1].events,
+                                           sizeof(*processes[p1].events)
+                                            * processes[p1].num_events);
+            processes[p1].events[e1] = processes[p1].events[e1 - !!e1] + 1;
 
             break;
 
@@ -85,19 +91,21 @@ int main()
             // Actually, they may be same. This code is commented out by design.
             */
 
-            e1 = num_events[p1];
-            ++num_events[p1];
-            processes[p1] = realloc(processes[p1],
-                                    sizeof(*processes[p1]) * num_events[p1]);
-            processes[p1][e1] = processes[p1][e1 - !!e1] + 1;
+            e1 = processes[p1].num_events;
+            ++processes[p1].num_events;
+            processes[p1].events = realloc(processes[p1].events,
+                                           sizeof(*processes[p1].events)
+                                            * processes[p1].num_events);
+            processes[p1].events[e1] = processes[p1].events[e1 - !!e1] + 1;
 
-            e2 = num_events[p2];
-            ++num_events[p2];
-            processes[p2] = realloc(processes[p2],
-                                    sizeof(*processes[p2]) * num_events[p2]);
-            processes[p2][e2] = 1 + (
-                processes[p2][e2 - !!e2] > processes[p1][e1] ?
-                processes[p2][e2 - !!e2] : processes[p1][e1]
+            e2 = processes[p2].num_events;
+            ++processes[p2].num_events;
+            processes[p2].events = realloc(processes[p2].events,
+                                           sizeof(*processes[p2].events)
+                                            * processes[p2].num_events);
+            processes[p2].events[e2] = 1 + (
+                processes[p2].events[e2 - !!e2] > processes[p1].events[e1] ?
+                processes[p2].events[e2 - !!e2] : processes[p1].events[e1]
             );
 
             break;
@@ -117,8 +125,8 @@ int main()
     for (i = 0; i < p; ++i) {
         printf("P%zu: ", i + 1);
 
-        for(j = 0; j < num_events[i]; ++j)
-            printf("%2zu ", processes[i][j]);
+        for(j = 0; j < processes[i].num_events; ++j)
+            printf("%2zu ", processes[i].events[j]);
 
         putchar('\n');
     }
