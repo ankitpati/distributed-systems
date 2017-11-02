@@ -19,3 +19,10 @@ sleep 1
 
 ./add_clnt localhost $@
 killall add_server
+
+: '
+OUTPUT
+
+./test 43.5 5.53
+43.500000 + 5.430000 = 48.930000
+'
