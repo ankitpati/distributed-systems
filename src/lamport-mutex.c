@@ -166,7 +166,7 @@ int main()
                   sizeof(*processes[p1].q),
                   (int (*)(const void *, const void *)) compar_q);
 
-            /* update all clocks and queues */
+            /* update all clocks and queues for REQUEST broadcast */
             for (p2 = 0; p2 < p; ++p2) {
                 if (p2 == p1) continue; /* my clock has already been updated */
 
@@ -194,8 +194,20 @@ int main()
             }
 
             for (i = 0; i < p && processes[i].q[0].pid == p1; ++i);
-            if (i == p)
+            if (i == p) {
+                /* update own clock for GRANTED responses */
+                for (i = 0; i < p - 1; ++i) {
+                    e1 = processes[p1].num_events;
+                    ++processes[p1].num_events;
+                    processes[p1].events = realloc(processes[p1].events,
+                                                   sizeof(*processes[p1].events)
+                                                    * processes[p1].num_events);
+                    processes[p1].events[e1] = processes[p1].events[e1 - !!e1]
+                                                                            + 1;
+                }
+
                 printf("Process %zu enters Critical Section.\n", p1 + 1);
+            }
 
             break;
 
