@@ -58,7 +58,7 @@ int main()
         "1. Isolated Event\n"
         "2. Communicated Event\n"
         "3. Critical Section Request\n"
-        "4. Critical Section Relese\n"
+        "4. Critical Section Release\n"
         "0. Done\n"
     );
 
@@ -320,7 +320,7 @@ Add Events (Choose an option)
 1. Isolated Event
 2. Communicated Event
 3. Critical Section Request
-4. Critical Section Relese
+4. Critical Section Release
 0. Done
 
 ?> 1
