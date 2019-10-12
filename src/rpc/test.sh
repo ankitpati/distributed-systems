@@ -11,10 +11,10 @@ source '/etc/os-release'
 
 case "$NAME" in
 'Fedora')
-    sudo dnf install gcc rpcbind libtirpc-devel
+    sudo dnf install gcc rpcbind libtirpc-devel > /dev/null
     ;;
 'Ubuntu')
-    sudo apt install gcc rpcbind libtirpc-dev
+    sudo apt install gcc rpcbind libtirpc-dev > /dev/null
     ;;
 *)
     echo 'Installation unsupported on this platform. May still run, though.'
